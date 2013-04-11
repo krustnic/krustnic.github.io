@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<!-- <script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script> -->
+	<style type="text/css">
+
+		html {
+			background-color: #252525;
+		}
+		
+		.container {
+			max-width: 900px;
+		}
+
+		.footer-link {
+			color: rgb(202, 202, 202);
+		}
+
+		.footer-link:hover {
+			color: #FFFFFF;
+		}
+
+		a:hover {
+			text-decoration: none;
+		}		
+	</style>	
+</head>
+<body>
+	<div style="background-color: white;">
+		<div class="container">
+			<div style="line-height: 65px;font-size: 19px;">
+				<!-- <span style="padding-right: 40px;"><a href="">Последнее</a></span>
+				<span><a href="">Архив</a></span> -->
+				<span style="font-size: 30px;"><a href="#footer"><span style="font-family: Times;"><b>IT</b></span>sin ↓</i></a></span>
+				<a target="_blank" href="https://twitter.com/krustnic"><img align="right" style="width:55px;" src="/img/twitter.png"></a>
+				
+			</div>
+		</div>
+		<div class="container" style="margin-top: 20px;margin-bottom:60px;text-align: justify;">      
+			<h2>Mac OS: чиним клавиши "Home" и "End" на PC-клавиатуре</h2>
+<p><img src="http://1.bp.blogspot.com/-Jvl-l545R-o/UUISZ6Mx42I/AAAAAAAABNc/hOTj_N3exkw/s320/MacVsPC2_550x413.jpg" alt=""/>
+</p>
+<p>Не так давно обзавелся маком и испытал легкий культурный шок. Где Control+C/Control+V?! Так как работать приходится не только на Mac-е, но и на PC - этот момент дико раздражал. Удилив немного времени изучению этого вопроса я понял, что нормально исправить эту "особенность" не получится - растроился, но смирился.
+</p>
+<p>Но каков же было мое удивление, когда я при кодинге воспользовался клавишами "Home" и "End"! Как оказалось Mac работает весьма и весьма своеобразно (кто бы мог подумтать) с не apple-овыми клавиатурами. И клавиша "Home", в частности, возвращает вас не к началу строки, а вначало всего документа. Так жить определенно нельзя. 
+</p>
+<p>К счастью есть довольно простое, хотя и не особо "эпловое" решение этой проблемы.
+</p>
+<p>Нужно вручную поменять поведение клавиш "Home" и "End" в системе. Для этого проделаем следующее:
+</p>
+<ol>
+ <li><p>Открываем терминал
+</p>
+
+ </li>
+
+ <li><p>Выполняем следующий команды:
+</p>
+<p>$ cd ~/Library  <br />
+$ mkdir KeyBindings  <br />
+$ cd KeyBindings  <br />
+$ nano DefaultKeyBinding.dict
+</p>
+<p>Последней командой мы открыли консольный текстовый редактор nano. Теперь вставим туда следующий код:
+</p>
+<pre><code>{
+    /* Remap Home / End keys to be correct */
+    "\UF729" = "moveToBeginningOfLine:"; /* Home */
+    "\UF72B" = "moveToEndOfLine:"; /* End */
+    "$\UF729" = "moveToBeginningOfLineAndModifySelection:"; /* Shift + Home */
+    "$\UF72B" = "moveToEndOfLineAndModifySelection:"; /* Shift + End */
+    "^\UF729" = "moveToBeginningOfDocument:"; /* Ctrl + Home */
+    "^\UF72B" = "moveToEndOfDocument:"; /* Ctrl + End */
+    "$^\UF729" = "moveToBeginningOfDocumentAndModifySelection:"; /* Shift + Ctrl + Home */
+    "$^\UF72B" = "moveToEndOfDocumentAndModifySelection:"; /* Shift + Ctrl + End */
+}
+</code></pre>
+ </li>
+
+ <li><p>Наживаем Control+X (выход из редактора) и затем "y" (сохранить изменения в файле).
+</p>
+
+ </li>
+
+ <li><p>Ну а теперь, к сожалению, придется перегрузиться.
+</p>
+
+ </li>
+
+ <li><p>Ваш мир стал немного лучше.
+</p>
+
+ </li>
+</ol>
+<p>Если манипуляции с терминалом вас пугают до глубины души, то есть более простое решение - скачать маааленькую программулинку, которая сделает это все за вас. Взять ее можно <a href="http://www.starryhope.com/keyfixer/">тут</a>.
+</p>
+	    </div>
+	    <div style="padding-top:30px; padding-bottom:60px; text-align: center;">
+	    	<img src="/img/end.gif">
+	    </div>
+	    <footer id="footer" class="footer" style="background-color: #252525;color: rgb(202, 202, 202);padding-bottom:30px;padding-top:30px;">
+	        <div class="container" style="">        	
+	        	<div style="padding-left:30px;padding-right:30px;">
+	        		<div style="font-size: 20px;padding-bottom:20px;">
+	        			<span>Другие посты</span>
+	        		</div>
+	        			<div><a class="footer-link" href="/./posts/http-get-post-methods.html">http-get-post-methods</a></div>	
+	        			<div><a class="footer-link" href="/./posts/something-about-ajax.html">something-about-ajax</a></div>	
+	        			<div><a class="footer-link" href="/./posts/mac-os-home-end-keyboard-buttons.html">mac-os-home-end-keyboard-buttons</a></div>	
+	        			<div><a class="footer-link" href="/./posts/why-we-need-dart.html">why-we-need-dart</a></div>	
+	        			<div><a class="footer-link" href="/./posts/same-origin-policy.html">same-origin-policy</a></div>	
+	        			<div><a class="footer-link" href="/./posts/create-objects-in-javascript.html">create-objects-in-javascript</a></div>	
+	        			<div><a class="footer-link" href="/./posts/version-control-systems-introduction.html">version-control-systems-introduction</a></div>	
+	        	</div>        	
+	            <div style="text-align: center;padding-top: 40px;">@krustnic 2013</div>
+	        </div>
+	    </footer>
+    </div>
+
+    <script type="text/javascript">
+		$("img").parent("p").css("text-align", "center");
+	</script>
+
+</body>
+</html>

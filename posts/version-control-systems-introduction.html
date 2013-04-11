@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<!-- <script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script> -->
+	<style type="text/css">
+
+		html {
+			background-color: #252525;
+		}
+		
+		.container {
+			max-width: 900px;
+		}
+
+		.footer-link {
+			color: rgb(202, 202, 202);
+		}
+
+		.footer-link:hover {
+			color: #FFFFFF;
+		}
+
+		a:hover {
+			text-decoration: none;
+		}		
+	</style>	
+</head>
+<body>
+	<div style="background-color: white;">
+		<div class="container">
+			<div style="line-height: 65px;font-size: 19px;">
+				<!-- <span style="padding-right: 40px;"><a href="">Последнее</a></span>
+				<span><a href="">Архив</a></span> -->
+				<span style="font-size: 30px;"><a href="#footer"><span style="font-family: Times;"><b>IT</b></span>sin ↓</i></a></span>
+				<a target="_blank" href="https://twitter.com/krustnic"><img align="right" style="width:55px;" src="/img/twitter.png"></a>
+				
+			</div>
+		</div>
+		<div class="container" style="margin-top: 20px;margin-bottom:60px;text-align: justify;">      
+			<h2>Системы контроля версий: основы</h2>
+<p><img src="http://2.bp.blogspot.com/-7ZuIzO9OWzo/UQiptbOYOKI/AAAAAAAABMg/axrfOKZpitM/s200/Octocat.png" alt=""/>
+</p>
+<p>Сегодня речь пойдет о том, что такое системы контроля версий. Рассмотрим самые базовые понятия, которые следует знать перед началом работы.
+</p>
+<p>Для начала давайте определимся, что же вообще такое система контроля версий (СКВ). По википедии система управления версиями это:
+</p>
+<pre><code>Программное обеспечение для облегчения работы с изменяющейся информацией. Система управления версиями позволяет хранить несколько версий одного и того же документа, при необходимости возвращаться к более ранним версиям, определять, кто и когда сделал то или иное изменение, и многое другое.
+</code></pre><p>Конечно же наиболее частым применением этих систем является разработка кода. С этой точки зрения СКВ обладает совершенно незаменимым свойством - позволяет организовать работу нескольких людей над одним программным проектом, невероятно облегчая при этом труд программистов как по удобству разработки, так и по соединению (сливанию) наработок всех участников проекта.
+</p>
+
+<h3>Основные понятия</h3>
+<p>Базовым понятием СКВ является репозиторий. Репозиторий - это хранилище СКВ, в котором хранятся все версии ваших файлов - то есть прокаченная папка с вашим проектом. Следующими по иерархии понятиями СКВ являются:
+</p>
+<ol>
+ <li><p>Ветки (Branches). Ветки - это параллельные направления развития вашего проекта. Например, типичным случаем создания ветки является работа над исправлением некоторого бага или проверка/прототипирование неоднозначного функционала. В качестве примера приведу такую ситуацию.
+</p>
+<p><img src="http://2.bp.blogspot.com/-op3Vzf44dz4/UQiqqRyXQ9I/AAAAAAAABMs/hY7NKcmAuPo/s1600/Git.+Example-1+%25281%2529.png" alt=""/>
+</p>
+
+ </li>
+
+ <li><p>Основная ветка (trunk в SVN, master в Git). Основная ветка - это текущая версия вашего проекта. При этом другие ветки проекта могут как отставать, так и опережать её по "функциональному прогрессу" вашего кода. Но в подавляющем большинстве случаев в какой-то момент времени каждая побочная ветка сливается с главной.
+</p>
+
+ </li>
+
+ <li><p>Тэги (Tags). Тэги служат для фиксации определенных версий веток. Например, добившись стабильной версии проекта (v1.0) из неё можно сделать тэг и использовать его как отправную точку для последующих экспериментов или для загрузки на продуктивный сервер. Как правило, после создания тэги больше не изменяются.
+</p>
+
+ </li>
+</ol>
+<p>Следующим понятием СКВ является коммит (commit). Коммит - это фиксация текущего состояния конкретной ветки, которая в отличии от тэгов носит локальный характер и не претендует на полную стабильность и завершенность проекта. Это просто контрольные точки, до каждой из которых вы можете в любой момент откатиться. Жизненный цикл файлов в репозитории можно представить следующим образом:
+</p>
+<p><img src="http://1.bp.blogspot.com/-SV3Fh12PGZ0/UQiqqf0n5uI/AAAAAAAABMw/efjcmzOtIHk/s1600/git-file-life-circle+%25283%2529.png" alt=""/>
+</p>
+<p>Все системы контроля версий можно разделить на две категории: централизованные и децентрализованные (то есть распределенные). Типичным и весьма популярным представителем первого типа является SVN (Subversion), второго - все более набирающая популярность Git.
+</p>
+
+<h3>Централизованные системы (SVN)</h3>
+<p>Централизованные системы подразумевают наличие выделенного, доступного всем участникам сервера, на котором находится уже известная нам структура проекта:
+</p>
+<ul>
+ <li>
+     branches
+ </li>
+
+ <li>
+     tags
+ </li>
+
+ <li>
+     trunk
+ </li>
+</ul>
+<p>Такая же структура папок находится и на машине разработчика. При этом разработчик работает с СКВ по клиент-серверной архитектуре. Как только разработчик делает коммит - изменения отправляются на сервер. Проверяется возможность слить новые версии файлов с теми, что есть на сервере и если конфликтов нет - сливание происходит автоматически, иначе разработчику приходит сообщение с просьбой разрешить конфликтную ситуацию. Примером конфликтной ситуации может быть совпадение названия функции в отправляемом файле и в файле на сервере. То есть, кто-то раньше нас уже завел такую функцию и нам предстоит решить, что нужно сделать: или заменить чужую реализацию своей или же переименовать свою функцию.
+</p>
+
+<h3>Распределенные системы (Git)</h3>
+<p>В распределенных системах, как и в централизованных, обычно есть выделенный сервер с репозиторием. Отличие заключается в том, что на машине разработчика СКВ по функционалу ничем не отличается от серверной. То есть разработчик может создавать коммиты, ветки и теги у себя на машине, не отражая это на центральном сервере. И лишь когда захочет - отправляет свою версию на сервер.
+</p>
+<p>В следующем посте я опишу основные команды, которые нужно знать для того чтобы начать работать с распределенной системой Git.
+</p>
+	    </div>
+	    <div style="padding-top:30px; padding-bottom:60px; text-align: center;">
+	    	<img src="/img/end.gif">
+	    </div>
+	    <footer id="footer" class="footer" style="background-color: #252525;color: rgb(202, 202, 202);padding-bottom:30px;padding-top:30px;">
+	        <div class="container" style="">        	
+	        	<div style="padding-left:30px;padding-right:30px;">
+	        		<div style="font-size: 20px;padding-bottom:20px;">
+	        			<span>Другие посты</span>
+	        		</div>
+	        			<div><a class="footer-link" href="/./posts/http-get-post-methods.html">http-get-post-methods</a></div>	
+	        			<div><a class="footer-link" href="/./posts/something-about-ajax.html">something-about-ajax</a></div>	
+	        			<div><a class="footer-link" href="/./posts/mac-os-home-end-keyboard-buttons.html">mac-os-home-end-keyboard-buttons</a></div>	
+	        			<div><a class="footer-link" href="/./posts/why-we-need-dart.html">why-we-need-dart</a></div>	
+	        			<div><a class="footer-link" href="/./posts/same-origin-policy.html">same-origin-policy</a></div>	
+	        			<div><a class="footer-link" href="/./posts/create-objects-in-javascript.html">create-objects-in-javascript</a></div>	
+	        			<div><a class="footer-link" href="/./posts/version-control-systems-introduction.html">version-control-systems-introduction</a></div>	
+	        	</div>        	
+	            <div style="text-align: center;padding-top: 40px;">@krustnic 2013</div>
+	        </div>
+	    </footer>
+    </div>
+
+    <script type="text/javascript">
+		$("img").parent("p").css("text-align", "center");
+	</script>
+
+</body>
+</html>

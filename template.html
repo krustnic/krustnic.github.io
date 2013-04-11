@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<!-- <script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script> -->
+	<style type="text/css">
+
+		html {
+			background-color: #252525;
+		}
+		
+		.container {
+			max-width: 900px;
+		}
+
+		.footer-link {
+			color: rgb(202, 202, 202);
+		}
+
+		.footer-link:hover {
+			color: #FFFFFF;
+		}
+
+		a:hover {
+			text-decoration: none;
+		}		
+	</style>	
+</head>
+<body>
+	<div style="background-color: white;">
+		<div class="container">
+			<div style="line-height: 65px;font-size: 19px;">
+				<!-- <span style="padding-right: 40px;"><a href="">Последнее</a></span>
+				<span><a href="">Архив</a></span> -->
+				<span style="font-size: 30px;"><a href="#footer"><span style="font-family: Times;"><b>IT</b></span>sin ↓</i></a></span>
+				<a target="_blank" href="https://twitter.com/krustnic"><img align="right" style="width:55px;" src="/img/twitter.png"></a>
+				
+			</div>
+		</div>
+		<div class="container" style="margin-top: 20px;margin-bottom:60px;text-align: justify;">      
+			{{!data["content"]}}
+	    </div>
+	    <div style="padding-top:30px; padding-bottom:60px; text-align: center;">
+	    	<img src="/img/end.gif">
+	    </div>
+	    <footer id="footer" class="footer" style="background-color: #252525;color: rgb(202, 202, 202);padding-bottom:30px;padding-top:30px;">
+	        <div class="container" style="">        	
+	        	<div style="padding-left:30px;padding-right:30px;">
+	        		<div style="font-size: 20px;padding-bottom:20px;">
+	        			<span>Другие посты</span>
+	        		</div>
+	        		%for post in list:
+	        			<div><a class="footer-link" href="/{{ list[post]['htmlFilename'] }}">{{ list[post]["name"] }}</a></div>	
+	        		%end       		
+	        	</div>        	
+	            <div style="text-align: center;padding-top: 40px;">@krustnic 2013</div>
+	        </div>
+	    </footer>
+    </div>
+
+    <script type="text/javascript">
+		$("img").parent("p").css("text-align", "center");
+	</script>
+
+</body>
+</html>
