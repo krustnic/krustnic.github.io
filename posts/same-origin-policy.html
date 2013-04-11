@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<!-- <script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script> -->
+	<style type="text/css">
+
+		html {
+			background-color: #252525;
+		}
+		
+		.container {
+			max-width: 900px;
+		}
+
+		.footer-link {
+			color: rgb(202, 202, 202);
+		}
+
+		.footer-link:hover {
+			color: #FFFFFF;
+		}
+
+		a:hover {
+			text-decoration: none;
+		}		
+	</style>	
+</head>
+<body>
+	<div style="background-color: white;">
+		<div class="container">
+			<div style="line-height: 65px;font-size: 19px;">
+				<!-- <span style="padding-right: 40px;"><a href="">Последнее</a></span>
+				<span><a href="">Архив</a></span> -->
+				<span style="font-size: 30px;"><a href="#footer"><span style="font-family: Times;"><b>IT</b></span>sin ↓</i></a></span>
+				<a target="_blank" href="https://twitter.com/krustnic"><img align="right" style="width:55px;" src="/img/twitter.png"></a>
+				
+			</div>
+		</div>
+		<div class="container" style="margin-top: 20px;margin-bottom:60px;text-align: justify;">      
+			<h2>Политика безопасности браузеров</h2>
+<p><img src="http://blog.whitehatsec.com/wp-content/uploads/glue1.jpg" alt=""/>
+</p>
+<p>Современные браузеры обладают рядом ограничений, о которых, безусловно, должен знать каждый разработчик. Наиболее часто web разработчики сталкиваются с политикой безопасности касательно кросс-доменных запросов "same origin policy"...
+</p>
+<p>Суть данной политики заключается в том, что все скрипты, находящиеся на странице <code>http://site1.com:80/</code> могут обмениваться информацией только с другими страницами из того же домена по тому же порту и тому же протоколу. Таким образом запросы к следующим адресам будут запрещены:
+</p>
+<pre><code>https://site1.com:80/ - другой протокол
+http://site2.com:80 - другой домен
+http://site1.com:8080/ - другой порт
+</code></pre><p>При попытке обратиться к данной странице вы получите сообщение вроде этого:
+</p>
+<pre><code>XMLHttpRequest cannot load http://site2.com. Origin http://site1.com is not allowed by Access-Control-Allow-Origin.
+</code></pre><p>С практической точки зрения данное ограничение означает, что вы не можете совершать AJAX запросы к другим доменам и не можете обращаться из вашего скрипта в IFRAME на вашей странице, принадлежащей другому сайту. Например, сервис ВКонтакте использует IFRAME для возможности вставки их системы комментариев к вам на сайт. Из-за политики безопасности вы не сможете из Javascript-а на вашей странице прочитать данные этого IFRAME-а и пройтись по комментариям или узнать имя пользователя ВКонтакте.
+</p>
+<p>Данный запрет существует для того, чтобы некоторый зловредный сайт, на который вы зашли, не смог бы от вашего имени обратится например на сайт "www.gmail.com"  и получить себе всю вашу почту. Данная политика просто запретит зловредному сайту, например, micrasoft.com, делать какие-либо запросы на сайт gmail.
+</p>
+<p>Отмечу, что данная политика - дело браузера, то есть чисто теоретически браузер может её и не реализовывать. Такого, к счастью, нет среди известных браузеров, однако, сделать свой такой браузер вполне реально. Так же у многих браузеров есть возможность вручную отключить политику безопасности (обычно для целей отладки в процессе разработки). Например, чтобы отключить её в браузере Chrome (ну или Chromium) нужно запустить его со специальным ключом:
+</p>
+<p>Для Windows/Linux:
+</p>
+<pre><code>chromium-browser --disable-web-security
+</code></pre><p>Для Mac OS:
+</p>
+<pre><code>open -a Google\ Chrome --args --disable-web-security --allow-file-access-from-files
+</code></pre><p>Порой для реализации определенного функционала все же необходима возможность крос-доменного взаимодействия. На этот случай в политике безопасности есть два исключения, на основе, которых все же можно реализовать обмен данными с другим сайтом. Исключениями являются теги &lt;img&gt; и &lt;script&gt; - они оба могут принимать в качестве значения атрибута src любой url и загружать его содержимое. То есть изображения и скрипты вы можете загружать с других доменов. На основе этих двух особенностей строятся различные методы "обхода" политики безопасности.
+</p>
+<p>Обмен данными с другим сайтом можно разделить на два вида:
+</p>
+<ul>
+ <li>
+     Нам нужно только передать данные на другой сайт.
+ </li>
+
+ <li>
+     Нам нужно получить данные с другого сайта.
+ </li>
+</ul>
+<p>Первый случай используется, например, в Google Analitics (GA). Для того чтобы собирать статистику посещений с вашего сайта, ей необходимо передавать на сервера Google нужные сведения. В данном случае GA использует особенность тега &lt;img&gt; - создает временный невидимый элемент img и в качестве значения атрибута src устанавливает адрес однопиксельного gif изображения, передавая в параметрах GET-запроса (после символа &amp;) необходимые пары ключ-значение:
+</p>
+<pre><code>http://www.google-analytics.com/__utm.gif?utmhn=www.ptweet.com&amp;amp;utmcs=UTF-8&amp;amp;utmsr=1680x1050&amp;amp;utmvp=1680x552
+</code></pre><p>В данном примере GA запрашивает с серверов Google изображение __utm.gif и передает в качестве параметров url посещенной страницы (utmhn=www.ptweet.com), мою кодировку (utmcs=UTF-8), текущее разрешение экрана (utmsr=1680x1050) и другие параметры, которые я для наглядности вырезал из запроса.
+</p>
+<p>Второй случай использует особенность тега &lt;script&gt; для  двустороннего обмена данными с другим сайтом. Данный метод называется JSONP (JSON with padding). JSON сам по себе представляет собой формат представления данных, который появился из недр Javascript-а, в следствии чего отлично им поддерживается. Пример данных описанных на JSON:
+</p>
+<pre><code>{
+    "name": "Peter Parker",
+    "nic": "Spiderman",
+    "family": {
+        "aunt": "May Reilly Parker-Jameson",
+        "uncle": "Ben"       
+    },
+    "superpowers": [
+        "Superhuman strength",
+        "speed",
+        "Regenerative healing factor",
+        "Ability to cling to most surfaces"
+    ]
+}
+</code></pre><p>Данный формат часто используется для передачи данных как альтернатива XML, в сравнении с которой JSON заметно более экономичен по трафику.
+</p>
+<p>Суть метода JSONP заключается в следующем. Благодаря тому, что значением атрибута src тэга &lt;script&gt; может быть произвольный адрес, то мы готовим на стороне сервера site2.com специальный url, например:
+</p>
+<pre><code>http://site2.com/getData/77 ,
+</code></pre><p>где 77 - это например id того элемента, который мы хотим получить. За данным url на стороне сервера стоит код, который делает следующее:
+</p>
+<ul>
+ <li>
+     Извлекает из запроса id затребованного элемента (В нашем примере это 77).
+ </li>
+
+ <li>
+     Осуществляет поиск данных по этому элементу в БД.
+ </li>
+
+ <li>
+     Преобразует данные в формат JSON.
+ </li>
+
+ <li>
+     Оборачивает полученный JSON функцией, которая уже существует в нашей исходной странице и которая будет заниматься обработкой полученных с сайта site2.com данных.
+ </li>
+</ul>
+<p>Наиболее неожиданным здесь является пункт 4. Суть его заключается в следующем. Если url site2.com/getData вернул бы нам в страницу просто преобразованные в формат JSON данные, то  это вызвало бы синтаксическую ошибку при попытке браузера интерпретировать эти данные в javascript код. Из-за этого нам приходится формировать на стороне сервера скрипт с одной функцией, параметром которой является наш JSON объект. Итоговый, возвращаемый скрипт может быть например такого вида:
+</p>
+<pre><code>processData( {
+    "name": "Peter Parker",
+    "nic": "Spiderman",
+    "family": {
+        "aunt": "May Reilly Parker-Jameson",
+        "uncle": "Ben"       
+    },
+    "superpowers": [
+        "Superhuman strength",
+        "speed",
+        "Regenerative healing factor",
+        "Ability to cling to most surfaces"
+    ]
+} );
+</code></pre><p>Благодаря этому данный скрипт при загрузке к нам на страницу будет успешно интерпретирован javascript-движком браузера и вызовет функцию processData(), которая уже должна существовать у нас на странице, передав ей в параметры необходимую нам информацию, полученную с сервера <code>http://site2.com/</code>.
+</p>
+<p>Таким образом можно организовать обмен данными между сайтами, которые попадают под запрет кросс-доменной политики браузеров. Для того, чтобы осуществлять такой обмен данными в необходимый нам момент времени нужно просто динамически создавать тэг &lt;script&gt;, генерируя для него соответствующий url.
+</p>
+<p>Следует отметить, что данный трюк не является угрозой безопасности или неправомерным обходом политики безопасности браузеров, так как в данном подходе вам необходим доступ к тому сайту, с которым вы хотите обмениваться данными для того чтобы реализовать в нем функцию динамической генерации javascript кода. Так что в большинстве случаев site2.com это, скорее всего, ваш сайт или же сайт, который специально разработан для работы по JSONP.
+</p>
+<p>Помимо описанных здесь способов существует еще рад других решений. Например, можно использовать flash, на который политика безопасности браузера не распространяется, однако у него есть своя схожая политика безопасности. Так же можно использовать java-апплеты и ряд других технологий, однако перечисленные в данной статье способы используются наиболее часто.
+</p>
+	    </div>
+	    <div style="padding-top:30px; padding-bottom:60px; text-align: center;">
+	    	<img src="/img/end.gif">
+	    </div>
+	    <footer id="footer" class="footer" style="background-color: #252525;color: rgb(202, 202, 202);padding-bottom:30px;padding-top:30px;">
+	        <div class="container" style="">        	
+	        	<div style="padding-left:30px;padding-right:30px;">
+	        		<div style="font-size: 20px;padding-bottom:20px;">
+	        			<span>Другие посты</span>
+	        		</div>
+	        			<div><a class="footer-link" href="/./posts/http-get-post-methods.html">http-get-post-methods</a></div>	
+	        			<div><a class="footer-link" href="/./posts/something-about-ajax.html">something-about-ajax</a></div>	
+	        			<div><a class="footer-link" href="/./posts/mac-os-home-end-keyboard-buttons.html">mac-os-home-end-keyboard-buttons</a></div>	
+	        			<div><a class="footer-link" href="/./posts/why-we-need-dart.html">why-we-need-dart</a></div>	
+	        			<div><a class="footer-link" href="/./posts/same-origin-policy.html">same-origin-policy</a></div>	
+	        			<div><a class="footer-link" href="/./posts/create-objects-in-javascript.html">create-objects-in-javascript</a></div>	
+	        			<div><a class="footer-link" href="/./posts/version-control-systems-introduction.html">version-control-systems-introduction</a></div>	
+	        	</div>        	
+	            <div style="text-align: center;padding-top: 40px;">@krustnic 2013</div>
+	        </div>
+	    </footer>
+    </div>
+
+    <script type="text/javascript">
+		$("img").parent("p").css("text-align", "center");
+	</script>
+
+</body>
+</html>

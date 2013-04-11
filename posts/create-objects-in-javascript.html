@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<!-- <script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script> -->
+	<style type="text/css">
+
+		html {
+			background-color: #252525;
+		}
+		
+		.container {
+			max-width: 900px;
+		}
+
+		.footer-link {
+			color: rgb(202, 202, 202);
+		}
+
+		.footer-link:hover {
+			color: #FFFFFF;
+		}
+
+		a:hover {
+			text-decoration: none;
+		}		
+	</style>	
+</head>
+<body>
+	<div style="background-color: white;">
+		<div class="container">
+			<div style="line-height: 65px;font-size: 19px;">
+				<!-- <span style="padding-right: 40px;"><a href="">Последнее</a></span>
+				<span><a href="">Архив</a></span> -->
+				<span style="font-size: 30px;"><a href="#footer"><span style="font-family: Times;"><b>IT</b></span>sin ↓</i></a></span>
+				<a target="_blank" href="https://twitter.com/krustnic"><img align="right" style="width:55px;" src="/img/twitter.png"></a>
+				
+			</div>
+		</div>
+		<div class="container" style="margin-top: 20px;margin-bottom:60px;text-align: justify;">      
+			<!--
+
+date : 10.01.13 12:11
+  some : some params string
+
+!-->
+
+
+<h2>Лучший способ создания объектов в JavaScript</h2>
+<p><img src="http://4.bp.blogspot.com/-paXJZuz0z1s/ULoJiTJsJWI/AAAAAAAAA9o/f4nseMMcgyw/s1600/3ways.jpg" alt=""/>
+</p>
+<p>В JavaScript существует действительно много различных возможностей для создания объектов и реализации наследования. Поначалу в этом многообразии довольно сложно определить для самого себя, в каком стиле следует писать код, что вытекает в гремучую смесь разных подходов в одном приложении.
+</p>
+<p>Данный пост является переводом <a href="https://gist.github.com/a2fd1da997f457b76efe?utm_source=feedburner&amp;utm_medium=twitter&amp;utm_campaign=Feed%3A+hnycombinator+%28HN+-+hnycombinator%29">"заметки"</a> Демиана Клиннерта (Damien Klinnert) о том, каким образом принято использовать объекты в сообществе JS.
+</p>
+
+<h4>1. Вступление</h4>
+<p>Данный код демонстрирует, каким образом в javascript следует создавать объекты. Он показывает лучшие приемы по использованию конструкторов, созданию атрибутов и применению наследования.
+</p>
+<p>Замечу, что в JS существует много способов по работе с объектами и наследованием. Мы решили использовать описанный ниже подход, так как он довольно общеупотребительный,   использует базовый для JS подход к наследованию через прототипы, полностью совместим с 
+   чистым ECMAScript3.1 и ECMAScript6.
+</p>
+<p>Сообщество использует именно этот подход. Последняя версия ECMAScript так же демонстрирует, что язык развивается в этом направлении и к тому же это наиболее производительный подход.
+</p>
+<p>Хотя, данный подход сильно завязан на доверии. Он очень динамичный и гибкий, но к тому и же и не безопасный. В нем не существует действительно приватных атрибутов и мы доверяем другим разработчикам в том, что они тоже следуют данному подходу, так как в противном случае они могут нанести серьезный вред всей системе в целом.
+</p>
+
+<h4>2. Создание объектов</h4>
+<p>Начнем с определения нового типа, в данном примере - с машины. Название объекта начинается с большой буквы, чтобы дать понять, что данная функция должна быть вызвана с ключевым словом "new".
+</p>
+<pre><code>var Car = function (arg1, arg2) {
+  this._velocity = 0;
+  this._speed = 0;
+  this._color = null;
+  this._arg1 = arg1;
+  this._arg2 = arg2;
+};
+</code></pre><p>С точки зрения большей производительности в конструкторе всегда стоит устанавливать некоторое значение для атрибутов даже если это null. Благодаря этому компилятор или интерпретатор JavaScript сможет оптимизировать использование памяти.
+</p>
+<p>Так же имейте ввиду, что в JavaScript нет приватных атрибутов. Общим подходом является использование префикса "_" в имени атрибута, чтобы показать, что данный атрибут не должен изменяться снаружи. Все это, безусловно, построено только на доверии.
+</p>
+
+<h4>3. Добавление методов</h4>
+<p>Чтобы добавить методы для экземпляра объекта Car необходимо установить его через прототип этого объекта. Таким образом мы будем уверены в оптимальной производительности, так как все экземпляры объекта Car будут использовать одинаковую реализацию функции, отличную лишь окружением. Это позволяет сильно сэкономить память. Никогда не определяйте функции в конструкторе, так как если вы это сделаете, то каждый объект будет иметь свою собственную реализацию данной функции.
+</p>
+<pre><code>Car.prototype.drive = function () {
+  // …
+};
+</code></pre><p>Чтобы добавить статический метод в объект Car - просто определим его в конструкторе. Все статические методы используют одну реализацию и имеют одно пространство имен.
+</p>
+<pre><code>Car.staticMethod = function () {
+  // …
+};
+</code></pre>
+<h4>4. Getters и Setters</h4>
+<p>Хотя все атрибуты имеют прямой доступ снаружи, это само по себе плохая практика и должна каким-то образом контролироваться. Getters имеют такое же название как и атрибут, только без "_". Они не имеют параметров и всегда возвращают значение из "this".
+</p>
+<pre><code>Car.prototype.velocity = function () {
+  return this._velocity;
+};
+</code></pre><p>У getters, которые возвращают значение типа Boolean, должен быть префикс "is" или "has". Например:
+</p>
+<pre><code>Car.prototype.isMotorActive = function () {
+  return this._isMotorActive;
+};
+</code></pre><p>В случае <code>Setters</code> к имени атрибута добавляется префикс "set". У них есть один параметр и они всегда возвращают "this" (для возможности выстраивания их цепочку - будет показано ниже).
+</p>
+<pre><code>Car.prototype.setVelocity = function (velocity) {
+  this._velocity = velocity;
+  return this;
+};
+</code></pre><p>Благодаря тому, что setters всегда возвращают "this", они могут быть выстроены в цепочку, например:
+</p>
+<pre><code>var myCar = new Car('arg1', 'arg2');
+myCar.setVelocity(0)
+     .setSpeed(0)
+     .setSomethingElse(0);
+</code></pre>
+<h4>5. Наследование</h4>
+<p>Чтобы унаследовать один объект от другого, мы используем наследование прототипа. Для этого в первую очередь в новом объекте нам следует создать новый конструктор:
+</p>
+<pre><code>var FireCar = function (arg1, arg2, arg3) { 
+    Car.call(this, arg1, arg2);
+
+    this._color = '#ff0000'; 
+    this._hasLedge = true; 
+    this._arg3 = arg3;
+};
+</code></pre><p>Наиболее важной строчкой является вызов родительского конструктора через "Car.call". Благодаря этому объект FireCar будет иметь все атрибуты своего родителя "Car". После этого мы можем добавлять новые атрибуты, необходимые для нового объекта.
+</p>
+<p>Затем нам необходимо убедится в том, что когда будет вызвана функция отсутствующая в новом объекте, то вызов будет перенаправлен к родительской реализации этой функции.
+</p>
+<pre><code>FireCar.prototype = new Car();
+</code></pre><p>Благодаря этому прототип FireCar будет перезаписан новым объектом, созданным на основе Car.prototype.
+</p>
+<p>Для того чтобы просто переопределить один из родительских методов - необходимо просто определить его в FireCar.prototype.
+</p>
+<pre><code>FireCar.prototype.drive = function () {
+  // …
+};
+</code></pre><p>Если же вы хотите переопределить родительский метод, но при этом использовать родительскую реализацию, то необходимо воспользоваться методом "call" (как и в случае с  конструктором):
+</p>
+<pre><code>FireCar.prototype.drive = function (arg1, arg2) {
+  var result = Car.prototype.drive.call(this, arg1, arg2);
+  // do some more stuff (and own implementation)
+  return result + 1;
+};
+</code></pre><p>Подготовка к наследованию завершена, теперь можно создать желанный объект:
+</p>
+<pre><code>var yourCar = new FireCar('arg1', 'arg2', 'arg3');
+</code></pre>
+	    </div>
+	    <div style="padding-top:30px; padding-bottom:60px; text-align: center;">
+	    	<img src="/img/end.gif">
+	    </div>
+	    <footer id="footer" class="footer" style="background-color: #252525;color: rgb(202, 202, 202);padding-bottom:30px;padding-top:30px;">
+	        <div class="container" style="">        	
+	        	<div style="padding-left:30px;padding-right:30px;">
+	        		<div style="font-size: 20px;padding-bottom:20px;">
+	        			<span>Другие посты</span>
+	        		</div>
+	        			<div><a class="footer-link" href="/./posts/http-get-post-methods.html">http-get-post-methods</a></div>	
+	        			<div><a class="footer-link" href="/./posts/something-about-ajax.html">something-about-ajax</a></div>	
+	        			<div><a class="footer-link" href="/./posts/mac-os-home-end-keyboard-buttons.html">mac-os-home-end-keyboard-buttons</a></div>	
+	        			<div><a class="footer-link" href="/./posts/why-we-need-dart.html">why-we-need-dart</a></div>	
+	        			<div><a class="footer-link" href="/./posts/same-origin-policy.html">same-origin-policy</a></div>	
+	        			<div><a class="footer-link" href="/./posts/create-objects-in-javascript.html">create-objects-in-javascript</a></div>	
+	        			<div><a class="footer-link" href="/./posts/version-control-systems-introduction.html">version-control-systems-introduction</a></div>	
+	        	</div>        	
+	            <div style="text-align: center;padding-top: 40px;">@krustnic 2013</div>
+	        </div>
+	    </footer>
+    </div>
+
+    <script type="text/javascript">
+		$("img").parent("p").css("text-align", "center");
+	</script>
+
+</body>
+</html>
