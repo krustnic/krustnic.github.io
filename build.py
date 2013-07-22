@@ -58,6 +58,10 @@ class Posts:
 		postObj["ext"]          = post.split(".")[-1:][0]
 		postObj["meta"]         = self._getPostMeta( post )
 
+		# If has no title in meta -> use filename
+		if not "title" in postObj["meta"].keys():
+			postObj["meta"]["title"] = postObj["name"]
+
 		return postObj
 
 	def _getPostMeta(self, filename):

@@ -1,6 +1,7 @@
 <!--
 
   date : 10.01.13 12:11
+  title : Лучший способ создания объектов в JavaScript
   some : some params string
 
 !-->
